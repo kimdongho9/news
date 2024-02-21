@@ -9,7 +9,7 @@ const getLatestNews = async () => {
 
 
   //과제용
-  const url = new URL(`https://celadon-zabaione-c1d562.netlify.app/top-headlines?q=${keyword}`);
+  const url = new URL(`https://celadon-zabaione-c1d562.netlify.app/top-headlines`);
 
   //url api 가져옴
   const response = await fetch(url);
