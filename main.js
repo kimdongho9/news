@@ -1,5 +1,11 @@
 // const API_KEY = `f92a158943c1483e814a7bf93bce3bbb`;
-
+const urlFetch = async (url) => {
+  // url api 가져옴
+  const response = await fetch(url);
+  const data = await response.json();
+  newsList = data.articles;
+  render(newsList); // render 함수에 newsList 전달
+}
 
 
 // async 사용해야 await 사용가능
@@ -15,11 +21,8 @@ const getLatestNews = async () => {
   // 과제용
   const url = new URL(`https://celadon-zabaione-c1d562.netlify.app/top-headlines`);
 
-  // url api 가져옴
-  const response = await fetch(url);
-  const data = await response.json();
-  newsList = data.articles;
-  render(newsList); // render 함수에 newsList 전달
+  
+  urlFetch(url)
 };
 
 
@@ -29,11 +32,7 @@ const getNewsByCategory = async (event) => {
   const category = event.target.textContent.toLowerCase();
   console.log("category", category)
   const url = new URL(`https://celadon-zabaione-c1d562.netlify.app/top-headlines?category=${category}`);
-  const response = await fetch(url);
-  const data = await response.json(); 
-  console.log("Ddd", data)
-  newsList = data.articles
-  render(newsList)
+  urlFetch(url)
 };
 
 
@@ -42,11 +41,7 @@ const getNewsByKeyword = async () => {
   const keyword = document.getElementById("search-input").value;
   console.log("keyword", keyword)
   const url = new URL(`https://celadon-zabaione-c1d562.netlify.app/top-headlines?q=${keyword}`)
-  const response = await fetch(url);
-  const data = await response.json();
-  console.log("keyword data", data)
-  newsList = data.articles
-  render(newsList)
+  urlFetch(url)
 }
 
 
