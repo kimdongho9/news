@@ -61,7 +61,7 @@
   position: absolute;
   top: 0;
   right: 25px;
-  font-size: 36px;
+  font-size: 35px;
   margin-left: 50px;
   border: none;
   background: none;
@@ -78,3 +78,17 @@
   border-radius: 3px;
 }
 
+.fa-search:hover {
+  color: rgb(155, 158, 0); 
+  cursor: pointer; 
+}
+
+.fa-bars:hover{
+  color: rgb(151, 35, 247); 
+  cursor: pointer;
+}
+
+.icon-button {
+  padding: 8px 9px 9px;
+  margin-top: 5px;
+}
