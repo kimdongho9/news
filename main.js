@@ -32,6 +32,7 @@ const getNewsByCategory = async (event) => {
   const category = event.target.textContent.toLowerCase();
   console.log("category", category)
   const url = new URL(`https://celadon-zabaione-c1d562.netlify.app/top-headlines?category=${category}`);
+
   urlFetch(url)
 };
 
@@ -41,6 +42,7 @@ const getNewsByKeyword = async () => {
   const keyword = document.getElementById("search-input").value;
   console.log("keyword", keyword)
   const url = new URL(`https://celadon-zabaione-c1d562.netlify.app/top-headlines?q=${keyword}`)
+  
   urlFetch(url)
 }
 
