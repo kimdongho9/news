@@ -1,10 +1,32 @@
 // const API_KEY = `f92a158943c1483e814a7bf93bce3bbb`;
 const urlFetch = async (url) => {
-  // url api 가져옴
-  const response = await fetch(url);
-  const data = await response.json();
-  newsList = data.articles;
-  render(newsList); // render 함수에 newsList 전달
+  try {
+    //이 안에서 에러가 발생하면
+    //이안에서 에러가 발생하면
+   // url api 가져옴
+   const response = await fetch(url);
+   const data = await response.json();
+
+
+   if(response.status === 200){
+    if(data.articles.length===0){
+      throw new Error("No result for this search")
+    }
+    newsList = data.articles;
+    render();
+   }else {
+    throw new Error(data.message);
+   }
+   newsList = data.articles;
+   render(newsList); // render 함수에 newsList 전달
+
+
+  } catch (error) {
+    //catch가 에러를 잡아준다.
+    errorRender(error.message);
+  }
+  
+  
 }
 
 
@@ -50,6 +72,11 @@ const getNewsByKeyword = async () => {
 
 
 const render = (newsList) => { // newsList를 인자로 받도록 수정
+
+  // newsList가 정의되어 있지 않으면 빈 배열로 초기화
+  newsList = newsList || []; 
+
+  
   const newsHTML = newsList.map(
     (news) => `<div class="row news">
   <div class="col-lg-4">
@@ -70,6 +97,15 @@ const render = (newsList) => { // newsList를 인자로 받도록 수정
 
   document.getElementById("news-board").innerHTML = newsHTML;
 };
+
+const errorRender = (errorMessage) => {
+  const errorHTML = `<div class = "alert alert-danger" role = "alert">
+  ${errorMessage}
+  </div>;`
+
+  document.getElementById("news-board").innerHTML = errorHTML
+}
+
 
 getLatestNews();
 
@@ -94,6 +130,10 @@ const openSearchBox = () => {
 window.onload = () => {
   document.getElementById("input-area").style.display = "none";
 };
+
+
+
+
 
 //1. 버튼틀에 클릭 이벤트주기
 //2. 카테고리별 뉴스 가져오기
