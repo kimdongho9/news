@@ -1,3 +1,10 @@
+
+.container{
+  width:650px;
+}
+
+
+
 .head-line{
   margin-top: 1em;
   display: flex;
@@ -16,7 +23,6 @@
   flex-wrap: wrap;
   border-top: #ebebeb;
   border-bottom: 4px double black;
-
 }
 
 .menus button{
@@ -26,7 +32,7 @@
 }
 
 .menus button:hover{
-  background-color: bisque;
+  background-color: rgba(236, 236, 236, 0.966);
 }
 .news-img-size{
   /* 부모의 100% */
@@ -83,12 +89,30 @@
   cursor: pointer; 
 }
 
-.fa-bars:hover{
-  color: rgb(151, 35, 247); 
-  cursor: pointer;
-}
 
 .icon-button {
   padding: 8px 9px 9px;
   margin-top: 5px;
 }
+
+
+
+@media(min-width: 767px){
+  .fa-bars {
+    display: none;
+  }
+}
+
+
+@media (max-width: 767px){
+
+  .fa-bars {
+    display: inline-block;
+  }
+
+	.fa-bars:hover{
+    color: rgb(151, 35, 247); 
+    cursor: pointer;
+  }
+};
+

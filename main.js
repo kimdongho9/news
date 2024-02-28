@@ -1,105 +1,65 @@
 // const API_KEY = `f92a158943c1483e814a7bf93bce3bbb`;
 const urlFetch = async (url) => {
-  try {
-    //이 안에서 에러가 발생하면
-    //이안에서 에러가 발생하면
-    // url api 가져옴
-    const response = await fetch(url);
-    const data = await response.json();
-
-
-    if (response.status === 200) {
-      if (data.articles.length === 0) {
-        throw new Error("No result for this search")
-      }
-      newsList = data.articles;
-      totalResults = data.totalResult;
-      render();
-      paginationRender();
-
-    } else {
-      throw new Error(data.message);
-    }
-    newsList = data.articles;
-    render(newsList); // render 함수에 newsList 전달
-    
-
-  } catch (error) {
-    //catch가 에러를 잡아준다.
-    errorRender(error.message);
-  }
-}
-
-
-
-
+  let newsList = [];
+  // url api 가져옴
+  const response = await fetch(url);
+  const data = await response.json();
+  newsList = data.articles;
+  render(newsList); // render 함수에 newsList 전달
+};
 
 // async 사용해야 await 사용가능
 const getLatestNews = async () => {
   // const url = new URL(`https://newsapi.org/v2/top-headlines?country=us&apiKey=${API_KEY}`);
-  let newsList = [];
+
   const menus = document.querySelectorAll(".menus button");
+  menus.forEach((menu) =>
+    menu.addEventListener("click", (event) => getNewsByCategory(event))
+  );
 
-  menus.forEach(menu => menu.addEventListener("click", (event) => getNewsByCategory(event)))
-
-  console.log(menus)
+  console.log(menus);
 
   // 과제용
-  const url = new URL(`https://celadon-zabaione-c1d562.netlify.app/top-headlines`);
+  const url = new URL(
+     `https://celadon-zabaione-c1d562.netlify.app/top-headlines`
+  );
 
-
-  urlFetch(url)
+  urlFetch(url);
 };
 
-let totalResults = 0
-let page = 1
-
-
-//const는 고정할 때
-const pageSize = 10
-const groupSize = 5
-
-
-
-
-
+//카테고리로 분류하기
 const getNewsByCategory = async (event) => {
-
   // 카테고리 소문자로 바꾸고 정렬하기
   const category = event.target.textContent.toLowerCase();
-  console.log("category", category)
-  const url = new URL(`https://celadon-zabaione-c1d562.netlify.app/top-headlines?category=${category}`);
-
-  urlFetch(url)
+  console.log("category", category);
+  const url = new URL(
+    `https://celadon-zabaione-c1d562.netlify.app/top-headlines?category=${category}`
+  );
+  urlFetch(url);
 };
-
 
 // 키워드로 검색하기
 const getNewsByKeyword = async () => {
   const keyword = document.getElementById("search-input").value;
-  console.log("keyword", keyword)
-  const url = new URL(`https://celadon-zabaione-c1d562.netlify.app/top-headlines?q=${keyword}`)
+  console.log("keyword", keyword);
+  const url = new URL(
+    `https://celadon-zabaione-c1d562.netlify.app/top-headlines?q=${keyword}`
+  );
+  urlFetch(url);
+};
 
-  urlFetch(url)
-}
-
-
-
-
-const render = (newsList) => { // newsList를 인자로 받도록 수정
-
-  // newsList가 정의되어 있지 않으면 빈 배열로 초기화
-  newsList = newsList || [];
-
-
-  const newsHTML = newsList.map(
-    (news) => `<div class="row news">
+//news보드 나오게 하기
+const render = (newsList) => {
+  // newsList를 인자로 받도록 수정
+  const newsHTML = newsList
+    .map(
+      (news) => `<div class="row news">
   <div class="col-lg-4">
     <img class="news-img-size"
       src="${news.urlToImage}"/>
   </div>
   <div class="col-lg-8">
-    <h2> ${news.title} </h2>
+    <h4> ${news.title} </h4>
     <p>
       ${news.description}
     </p>
@@ -108,23 +68,13 @@ const render = (newsList) => { // newsList를 인자로 받도록 수정
     </div>
   </div>
 </div>`
-  ).join(''); // join으로 배열의 ,를 지울수 있다.
+    )
+    .join(""); // join으로 배열의 ,를 지울수 있다.
 
   document.getElementById("news-board").innerHTML = newsHTML;
 };
 
-const errorRender = (errorMessage) => {
-  const errorHTML = `<div class = "alert alert-danger" role = "alert">
-  ${errorMessage}
-  </div>;`
-
-  document.getElementById("news-board").innerHTML = errorHTML
-}
-
-
 getLatestNews();
-
-
 
 
 const openNav = () => {
@@ -135,14 +85,16 @@ const closeNav = () => {
   document.getElementById("mySidenav").style.width = "0";
 };
 
+
 const openSearchBox = () => {
-  let inputArea = document.getElementById("input-area")
+  let inputArea = document.getElementById("input-area");
   if (inputArea.style.display === "inline") {
-    inputArea.style.display = "none"
+    inputArea.style.display = "none";
   } else {
-    inputArea.style.display = "inline"
+    inputArea.style.display = "inline";
   }
 };
+
 
 window.onload = () => {
   document.getElementById("input-area").style.display = "none";
@@ -150,34 +102,63 @@ window.onload = () => {
 
 
 
-const paginationRender = () => {
-  // totalResult,
-  // page
-  // pageSize
-  // groupSize
+let page = 1; // 가져올 페이지 수
+let isFetching = false; //데이터를 가져오는 중인지 여부를 나타내는 변수
+let hasMore = true; //가져올 더 많은 데이터가 있는지 여부를 나타내는 변수
 
-  // pageGroup
-  const pageGroup = Math.ceil(page / groupSize);
-  // lastPage
-  const lastPage = pageGroup * groupSize;
-  // firstPage
-  const firstPage = lastPage - (groupSize - 1);
-  paginationHTML = ``
 
-  for (let i = firstPage; i <= lastPage; i++) {
-    paginationHTML+=`<li class="page-item"><a class="page-link" href="#">${i}</a></li>`
+
+// document.body.scrollHeight: body(페이지 전체)의 높이를 나타냄
+
+window.addEventListener('scroll', () => {
+  // 데이터를 가져오는 중이 아니고, 더 가져올 데이터가 있고, 스크롤을 페이지 맨 하단에 도달했을 때 컨텐츠 추가
+  if (!isFetching && hasMore && (window.innerHeight + window.scrollY) >= document.body.scrollHeight) {
+    
+    loadMoreContent();
   }
+});
 
-  
-  Document.querySelector(".pagination").innerHTML = paginationHTML
 
+
+async function loadMoreContent() {
+  isFetching = true; //데이터 가져오는 중
+
+  // 로딩 아이콘이 로딩 중 보이게끔.
+  document.getElementById('loader').style.display = 'block';
+
+  setTimeout(async () => {
+    try {
+      
+      const url = new URL(`https://celadon-zabaione-c1d562.netlify.app/top-headlines?page=${page}`);
+      
+      // 새로운 페이지의 뉴스를 가져옴.
+      const data = await urlFetch(url);
+
+      // 페이지를 1씩 증가.
+      page++;
+
+
+      // 만약 데이터가 더 이상 없으면.
+      if (data.length === 0) {
+        hasMore = false;
+        return;
+      }
+      
+
+    } catch (error) {
+      // 에러 발생시 메시지.
+      console.error('Error fetching news:', error);
+      
+    } finally {
+
+      // 로딩 아이콘을 숨김.
+      document.getElementById('loader').style.display = 'none';
+      isFetching = false;
+    }
+  }, 1000); // 1초의 텀을 두고 로딩 표시기를 화면에 나타냅니다.
 }
 
 
-const moveToPage = () => {
-  console.log("movetopage");
-};
-getLatestNews();
 
 
 
